@@ -519,7 +519,6 @@ ul, ol { list-style: none; }
 }
 .hero__image img {
   width: 100%;
-  max-width: 440px;
   border-radius: var(--r-xl);
   box-shadow: var(--shadow-xl);
   border: 4px solid rgba(96,179,1,0.15);
