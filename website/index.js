@@ -136,22 +136,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. MOBILE MENU
+  // 5. MOBILE MENU — auto-inject into all pages
+  if (!document.getElementById('mobile-nav')) {
+    const currentPage = location.pathname.split('/').pop() || 'index.html';
+    const menuItems = [
+      { href: 'index.html', label: 'Trang Chủ', icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
+      { href: 'about.html', label: 'Giới Thiệu', icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>' },
+      { href: 'archive.html', label: 'Sản Phẩm', icon: '<path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s1 2.5-1 6c-2 3.5-5 5.5-5 5.5"/><path d="M14 21c0-3.5-2-7-2-7"/>' },
+      { href: 'news.html', label: 'Tin Tức', icon: '<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>' },
+      { href: 'contact.html', label: 'Liên Hệ', icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>' },
+    ];
+    const isActive = (href) => {
+      if (href === 'index.html' && (currentPage === '' || currentPage === 'index.html')) return true;
+      if (href === 'archive.html' && (currentPage === 'archive.html' || currentPage === 'single-product.html')) return true;
+      if (href === 'news.html' && (currentPage === 'news.html' || currentPage === 'single-post.html')) return true;
+      return currentPage === href;
+    };
+    const linksHTML = menuItems.map(item =>
+      `<a href="${item.href}"${isActive(item.href) ? ' class="mobile-nav__active"' : ''}><svg class="icon" viewBox="0 0 24 24">${item.icon}</svg>${item.label}</a>`
+    ).join('');
+
+    const mobileHTML = `
+      <div class="mobile-overlay" id="mobile-overlay"></div>
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+        <div class="mobile-nav__header">
+          <a href="index.html" class="logo" style="text-decoration:none;">
+            <div class="logo__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s1 2.5-1 6c-2 3.5-5 5.5-5 5.5"/><path d="M11.7 11.2a5.18 5.18 0 0 1 3.3-2.2c2.5-.4 4-1 4-1s-.3 2.3-2 4c-1.7 1.7-3.3 2.5-3.3 2.5"/><path d="M14 21c0-3.5-2-7-2-7"/></svg></div>
+            <div class="logo__text"><span class="logo__name">Thảo Dược Thaphaco</span></div>
+          </a>
+          <button class="mobile-nav__close" id="mobile-nav-close" aria-label="Đóng menu">
+            <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="mobile-nav__links">${linksHTML}</div>
+        <div class="mobile-nav__contact">
+          <a href="tel:0901806930"><svg class="icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0901 806 930</a>
+          <a href="mailto:splworks.info@gmail.com"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> splworks.info@gmail.com</a>
+        </div>
+      </nav>`;
+    document.body.insertAdjacentHTML('beforeend', mobileHTML);
+  }
+
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileNav = document.getElementById('mobile-nav');
   const mobileOverlay = document.getElementById('mobile-overlay');
   const mobileNavClose = document.getElementById('mobile-nav-close');
 
   const openMobile = () => {
-    mobileNav.classList.add('active');
-    mobileOverlay.classList.add('active');
-    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+    mobileNav?.classList.add('active');
+    mobileOverlay?.classList.add('active');
+    mobileMenuBtn?.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
   };
   const closeMobile = () => {
-    mobileNav.classList.remove('active');
-    mobileOverlay.classList.remove('active');
-    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    mobileNav?.classList.remove('active');
+    mobileOverlay?.classList.remove('active');
+    mobileMenuBtn?.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   };
 
@@ -159,9 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
   mobileNavClose?.addEventListener('click', closeMobile);
   mobileOverlay?.addEventListener('click', closeMobile);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+    if (e.key === 'Escape' && mobileNav?.classList.contains('active')) {
       closeMobile();
-      mobileMenuBtn.focus();
+      mobileMenuBtn?.focus();
     }
   });
 

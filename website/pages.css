@@ -1891,9 +1891,17 @@
 
 /* Nav active state */
 .nav-links a.active {
-  color: var(--color-primary);
-  font-weight: var(--fw-semibold);
+  color: #fff;
+  font-weight: var(--fw-bold);
+  background: rgba(255,255,255,0.18);
+  text-shadow: 0 0 8px rgba(255,255,255,0.3);
 }
+.nav-links a.active::after {
+  width: 60%;
+  background: #ffe14d;
+  height: 3px;
+}
+.nav-links a.active .icon { opacity: 1; }
 
 /* ============================================
    NEWS ARCHIVE PAGE
